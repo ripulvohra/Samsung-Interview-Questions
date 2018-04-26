@@ -1,0 +1,154 @@
+/*
+Company S has developed an industrial endoscope available to explore inner part of the decrepit water pipes. It is possible to explore the inner part of the pipes putting the endoscope in a certain part of the pipe. The endoscope can be moved in the pipe only. Meanwhile, when the pipes are connected to each other, if the length of the endoscope is long enough to explore ,then it is able to inspect the connected pipes. However, we cannot observe every pipe because the length of endoscope is limited.
+
+When the map of the ground water pipe, the location where the endoscope to out in, and the length of the endoscope is given, calculate the number of pipe which are available to explore. Length of endoscope means the range upto which endoscope can explore. There are seven kind of pipes, and description for each pipe are shown below:
+
+S.No	Pipe	Connected to
+1		Up, Down, Left, Right
+2		Up, Down
+3		Left, Right
+4		Up, Right
+5		Down, Right
+6		Down, Left
+7		Up, Left
+When the map of the ground water pipe, the location where the endoscope to out in, and the length of the endoscope is given, calculate the number of pipe which are available to explore. Length of endoscope means the range upto which endoscope can explore.
+
+Input
+In the first line, T, the number of total test cases is given. From the second line, T test cases are given. In the first line of each test case, N, the height of the map of the ground water pipes, M, the width, R, the vertical location of the water pipe where to put in the endoscope, C, the horizontal location of it, and the length of the endoscope L are given. In the following N lines information of the map of ground water pipe is given. Each line has M numbers. Each number (from 1 to 7) means the type of water pipe for that point. 0 means there is no water pipe buried in that place.
+
+Output
+Print the respective answer for T test cases in total for T lines. The answer is the number of water pipes which is available to observe using the endoscope.
+
+Constraints
+1≤ T ≤100
+
+1≤ N, M ≤50
+
+0≤ X < N
+
+0≤ Y < M
+
+1≤ L ≤ 20
+*/
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+int a[1001][1001];
+bool valid(int xx,int yy,int aaye)
+{
+    if(xx<0||xx>n-1||yy<0||yy>m-1) return false;
+    else
+    {
+    if(aaye==1)
+    {
+        if(a[xx][yy]==1||a[xx][yy]==2||a[xx][yy]==5||a[xx][yy]==6) return true;
+        else return false;
+    }
+    else if(aaye==2)
+    {
+         if(a[xx][yy]==1||a[xx][yy]==2||a[xx][yy]==4||a[xx][yy]==7) return true;
+        else return false;
+    }
+    else if(aaye==3)
+    {
+         if(a[xx][yy]==1||a[xx][yy]==3||a[xx][yy]==5||a[xx][yy]==4) return true;
+        else return false;
+    }
+    else if(aaye==4)
+    {
+         if(a[xx][yy]==1||a[xx][yy]==3||a[xx][yy]==7||a[xx][yy]==6) return true;
+        else return false;
+    }
+    }
+    
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    int t;
+    cin>>t;
+    while(t--)
+    {
+    
+        int x,y,l;
+        cin>>n>>m>>x>>y>>l;
+        //y--;
+       // x--;
+      
+        int lvl[n][m];
+        bool mp[n][m];
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                cin>>a[i][j];
+                lvl[i][j]=0;
+                mp[i][j]=0;
+            }
+        }
+        int ans=0;
+        
+    queue<pair<int,int> > q;
+    pair<int,int> p;
+    p=make_pair(x,y);
+    q.push(p);
+    if(a[x][y]!=0){lvl[x][y]=1;ans=1;}
+    mp[p.first][p.second]=1;
+    while(!q.empty())
+    {
+        pair<int,int> p1=q.front();
+        q.pop();
+        int i=p1.first;
+        int j=p1.second;
+        
+    
+        //cout<<i<<" "<<j<<endl;
+        if(a[i][j]==1)
+        {
+           // cout<<valid(i+1,j)<<" "<<a[i+1][j]<<" "<<mp[i+1][j]<<endl;
+          if(valid(i+1,j,2)&&a[i+1][j]&&mp[i+1][j]==0) {mp[i+1][j]=1;ans++;lvl[i+1][j]=lvl[i][j]+1; if(lvl[i+1][j]<l){q.push(make_pair(i+1,j));} }//down
+          if(valid(i-1,j,1)&&a[i-1][j]&&mp[i-1][j]==0) { mp[i-1][j]=1;ans++;lvl[i-1][j]=lvl[i][j]+1; if(lvl[i-1][j]<l){q.push(make_pair(i-1,j));}}//up
+          if(valid(i,j+1,4)&&a[i][j+1]&&mp[i][j+1]==0) {mp[i][j+1]=1;ans++;lvl[i][j+1]=lvl[i][j]+1; if(lvl[i][j+1]<l){q.push(make_pair(i,j+1));} }//right
+          if(valid(i,j-1,3)&&a[i][j-1]&&mp[i][j-1]==0) {mp[i][j-1]=1;ans++;lvl[i][j-1]=lvl[i][j]+1; if(lvl[i][j-1]<l){q.push(make_pair(i,j-1));} }//left
+             
+        }
+        else if(a[i][j]==2)
+        {
+             if(valid(i+1,j,2)&&a[i+1][j]&&mp[i+1][j]==0) {mp[i+1][j]=1;ans++;lvl[i+1][j]=lvl[i][j]+1; if(lvl[i+1][j]<l){q.push(make_pair(i+1,j));} }//down
+          if(valid(i-1,j,1)&&a[i-1][j]&&mp[i-1][j]==0) { mp[i-1][j]=1;ans++;lvl[i-1][j]=lvl[i][j]+1; if(lvl[i-1][j]<l){q.push(make_pair(i-1,j));}}//up
+        }
+        else if(a[i][j]==3)
+        {
+             if(valid(i,j+1,4)&&a[i][j+1]&&mp[i][j+1]==0) {mp[i][j+1]=1;ans++;lvl[i][j+1]=lvl[i][j]+1; if(lvl[i][j+1]<l){q.push(make_pair(i,j+1));} }//right
+          if(valid(i,j-1,3)&&a[i][j-1]&&mp[i][j-1]==0) {mp[i][j-1]=1;ans++;lvl[i][j-1]=lvl[i][j]+1; if(lvl[i][j-1]<l){q.push(make_pair(i,j-1));} }//left
+        }
+        else if(a[i][j]==4)
+        {
+          if(valid(i-1,j,1)&&a[i-1][j]&&mp[i-1][j]==0) { mp[i-1][j]=1;ans++;lvl[i-1][j]=lvl[i][j]+1; if(lvl[i-1][j]<l){q.push(make_pair(i-1,j));}}//up
+          if(valid(i,j+1,4)&&a[i][j+1]&&mp[i][j+1]==0) {mp[i][j+1]=1;ans++;lvl[i][j+1]=lvl[i][j]+1; if(lvl[i][j+1]<l){q.push(make_pair(i,j+1));} }//right
+        }
+        else if(a[i][j]==5)
+        {
+             if(valid(i+1,j,2)&&a[i+1][j]&&mp[i+1][j]==0) {mp[i+1][j]=1;ans++;lvl[i+1][j]=lvl[i][j]+1; if(lvl[i+1][j]<l){q.push(make_pair(i+1,j));} }//down
+              if(valid(i,j+1,4)&&a[i][j+1]&&mp[i][j+1]==0) {mp[i][j+1]=1;ans++;lvl[i][j+1]=lvl[i][j]+1; if(lvl[i][j+1]<l){q.push(make_pair(i,j+1));} }//right
+        }
+        else if(a[p1.first][p1.second]==6)
+        {
+            if(valid(i+1,j,2)&&a[i+1][j]&&mp[i+1][j]==0) {mp[i+1][j]=1;ans++;lvl[i+1][j]=lvl[i][j]+1; if(lvl[i+1][j]<l){q.push(make_pair(i+1,j));} }//down
+                 if(valid(i,j-1,3)&&a[i][j-1]&&mp[i][j-1]==0) {mp[i][j-1]=1;ans++;lvl[i][j-1]=lvl[i][j]+1; if(lvl[i][j-1]<l){q.push(make_pair(i,j-1));} }//left
+        }
+        else if(a[i][j]==7)
+        {
+                if(valid(i-1,j,1)&&a[i-1][j]&&mp[i-1][j]==0&&mp[i-1][j]==0) {mp[i-1][j]=1; ans++;lvl[i-1][j]=lvl[i][j]+1; if(lvl[i-1][j]<l){q.push(make_pair(i-1,j));}}//up
+                       if(valid(i,j-1,3)&&a[i][j-1]&&mp[i][j-1]==0) {mp[i][j-1]=1;ans++;lvl[i][j-1]=lvl[i][j]+1; if(lvl[i][j-1]<l){q.push(make_pair(i,j-1));} }//left
+        }
+        
+    }
+     
+        
+        cout<<ans<<endl;
+    }
+    
+}
