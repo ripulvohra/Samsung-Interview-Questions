@@ -1,0 +1,107 @@
+#include<bits/stdc++.h>
+using namespace std;
+///_________________________________________________________________________________________________________
+//COPY FROM HERE.............
+
+const int strlength=1000001;
+int rankk[strlength];
+int nextrank[strlength];
+bool com(int a,int b)
+{
+    if(rankk[a]<rankk[b]) return true;
+    if( (rankk[a]==rankk[b])&&(nextrank[a]<=nextrank[b]) ) return true;
+    else return false;
+    
+}
+void solve(string s)
+{
+    int n=s.length();
+    int newrank[n];
+    int sortedsuffarr[n]; //Array represnting sorted suffixes (suffixs starting index will be there)
+    for(int i=0;i<n;i++)
+    {
+        sortedsuffarr[i]=i;
+        rankk[i]=s[i]-'a';
+    }
+    for(int i=0;i<n;i++)
+    {
+        if((i+1)<n)nextrank[i]=rankk[i+1];
+        else nextrank[i]=-1;
+    }
+   
+    sort(sortedsuffarr,sortedsuffarr+n,com);
+    int doitfordigits=4;
+    int steps=2;
+    while(doitfordigits<n)
+    {
+        newrank[sortedsuffarr[0]]=0;
+        for(int i=1;i<n;i++)
+        {
+        if( (rankk[sortedsuffarr[i]]==rankk[sortedsuffarr[i-1]])&&(nextrank[sortedsuffarr[i]]==nextrank[sortedsuffarr[i-1]]) )
+        newrank[sortedsuffarr[i]]=newrank[sortedsuffarr[i-1]];
+        else newrank[sortedsuffarr[i]]=newrank[sortedsuffarr[i-1]]+1;
+        }
+        
+        for(int i=0;i<n;i++)rankk[sortedsuffarr[i]]=newrank[sortedsuffarr[i]];
+        for(int i=0;i<n;i++)
+        {
+        if((i+steps)<n)nextrank[i]=rankk[i+steps];
+        else nextrank[i]=-1;
+        }
+        sort(sortedsuffarr,sortedsuffarr+n,com);
+        steps++;
+        doitfordigits=doitfordigits*2;
+    }
+    int firsts=-1,lasts=-1,firste=-1,laste=-1;
+    for(int j=0;j<n;j++)
+    { 
+        int ind=sortedsuffarr[j];
+        if(s[ind]=='a'||s[ind]=='e'||s[ind]=='i'||s[ind]=='o'||s[ind]=='u')
+        {
+            firsts=ind;
+           
+            for(int i=(ind);i<n;i++)
+            {
+                
+                 if(!(s[i]=='a'||s[i]=='e'||s[i]=='i'||s[i]=='o'||s[i]=='u') ) {firste=i;break;}
+            }
+            
+            if(firste!=-1) break;
+        }
+    
+    
+    }
+    
+    if(firste==(-1)) {cout<<"No such String\n"; return;}
+    for(int j=(n-1);j>=0;j--)
+    { 
+        int ind=sortedsuffarr[j];
+        
+        if(s[ind]=='a'||s[ind]=='e'||s[ind]=='i'||s[ind]=='o'||s[ind]=='u')
+        {
+            lasts=ind;
+           
+            for(int i=(n-1);i>=ind;i--)
+            {
+                
+                 if(!(s[i]=='a'||s[i]=='e'||s[i]=='i'||s[i]=='o'||s[i]=='u') ) {laste=i;break;}
+            }
+            
+            if(laste!=-1) break;
+        }
+    
+    }
+    
+    for(int i=firsts;i<=firste;i++) cout<<s[i]; cout<<" ";
+    for(int i=lasts;i<=laste;i++) cout<<s[i];
+}
+
+///_________________________________________________________________________________________________________
+//////////COPY TILL HERE
+
+int main()
+{
+    string s; cin>>s; solve(s);
+}
+
+
